@@ -17,7 +17,7 @@ new_model.compile()
 new_model.summary()
 
 # Define the class names
-class_names = ["walking", "stationary", "sleep"]
+class_names = ["stationary", "sleep"]
 
 # Define a function to preprocess the input data
 def preprocess_data(input_data):
@@ -52,20 +52,20 @@ async def root():
 
 # Endpoint to make predictions
 @app.post("/predict/")
-async def predict(data: str = Query(..., description="Comma-separated data in the format acc_x,acc_y,acc_z,gy_x,gy_y,gy_z,behavior")):
-    # Preprocess the input data
-    dataX = preprocess_data(data)
+# async def predict(data: str = Query(..., description="Comma-separated data in the format acc_x,acc_y,acc_z,gy_x,gy_y,gy_z,behavior")):
+async def predict(data: List[List[List[float]]]):
 
     # Make predictions
-    predictions = new_model.predict(dataX)
+    predictions = new_model.predict(data)
 
-    # Get prediction classes
+    # # Get prediction classes
     prediction_classes = np.argmax(predictions, axis=1)
 
-    # Map prediction classes to class names
+    # # Map prediction classes to class names
     predicted_labels = [class_names[pred] for pred in prediction_classes]
 
     return {"predicted_labels": predicted_labels}
+    # return {data}
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 8000))
