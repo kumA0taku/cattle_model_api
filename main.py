@@ -12,6 +12,7 @@ from io import StringIO
 
 app = FastAPI()
 
+#ส่วนของการเรียกใช้ model
 new_model = tf.keras.models.load_model('c2_N35_cell2.h5', compile=False)
 new_model.compile()
 new_model.summary()
@@ -65,7 +66,6 @@ async def predict(data: List[List[List[float]]]):
     predicted_labels = [class_names[pred] for pred in prediction_classes]
 
     return {"predicted_labels": predicted_labels}
-    # return {data}
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 8000))
